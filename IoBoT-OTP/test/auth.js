@@ -23,5 +23,17 @@ contract("Auth", function (accounts) {
     assert.equal(result, true, "OTP is valid");
     assert.equal(result2, false, "OTP is invalid");
   })
+  it("Expired OTP", async function () {
+    const instance = await Auth.deployed();
+    const otp = await instance.getAuthenticationToken(accounts[0]);
 
+    function timeout(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    await timeout(70000);
+
+    const result = await instance.validateOTP(otp, accounts[0]);
+    assert.equal(result, false, "OTP has expired");
+
+  })
 });
