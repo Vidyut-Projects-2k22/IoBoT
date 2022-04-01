@@ -41,7 +41,7 @@ contract auth {
   }
 
     function validateOTP(uint code, address user) public view returns(bool){
-        if (block.timestamp - otps[user].createdTime < 1 minutes) {
+        if (block.timestamp - otps[user].createdTime < 10 minutes) {
             return otps[user].otpCode == code;
         }
         else{
