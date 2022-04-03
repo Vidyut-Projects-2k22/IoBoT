@@ -30,7 +30,7 @@ contract("Auth", function (accounts) {
     function timeout(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
-    await timeout(630000);
+    await timeout(63000);
 
     const result = await instance.validateOTP(otp, accounts[0]);
     assert.equal(result, false, "OTP has expired");

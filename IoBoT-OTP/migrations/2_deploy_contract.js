@@ -1,4 +1,4 @@
-var Auth = artifacts.require("auth2");
+var Auth = artifacts.require("auth");
 
 module.exports = function(deployer) {
   deployer.deploy(Auth);

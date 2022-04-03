@@ -20,6 +20,11 @@ contract auth {
         _;
     }
 
+    event OtpCreated(address indexed _owner, uint indexed _otpCode, uint _createdTime);
+    event OtpSent(address indexed _owner, uint indexed _otpCode, uint _usedTime);
+    event OtpExpired(address indexed _owner, uint indexed _otpCode, uint _expiredTime);
+    event OtpValidated(address indexed _owner, uint indexed _otpCode, uint _revokedTime);
+
     function generateOTP(address user) public ownerOnly{
         uint otp = uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty,  
         msg.sender))) % 1000000;
@@ -30,9 +35,11 @@ contract auth {
     require(authenticationToken > 0);
     otps[user].otpCode = authenticationToken;
     otps[user].createdTime = block.timestamp;
+    emit OtpCreated(msg.sender, authenticationToken, block.timestamp);
   }
 
-  function getAuthenticationToken(address user) public view returns (uint) {
+  function getAuthenticationToken(address user) public returns (uint) {
+      emit OtpSent(msg.sender, otps[user].otpCode, block.timestamp);
     return otps[user].otpCode;
   }
 
@@ -40,11 +47,13 @@ contract auth {
       return block.timestamp - otps[user].createdTime;
   }
 
-    function validateOTP(uint code, address user) public view returns(bool){
-        if (block.timestamp - otps[user].createdTime < 10 minutes) {
+    function validateOTP(uint code, address user) public returns(bool){
+        if (block.timestamp - otps[user].createdTime < 1 minutes) {
+            emit OtpValidated(msg.sender, otps[user].otpCode, block.timestamp);
             return otps[user].otpCode == code;
         }
         else{
+            emit OtpExpired(msg.sender, otps[user].otpCode, block.timestamp);
             return false;
         }
     }
