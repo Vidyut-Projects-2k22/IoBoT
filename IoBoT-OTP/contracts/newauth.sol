@@ -20,8 +20,13 @@ contract auth2 {
         _;
     }
 
+    event OtpCreated(string indexed _owner, uint indexed _otpCode, uint _createdTime);
+    event OtpSent(string indexed _owner, uint indexed _otpCode);
+    event OtpExpired(string indexed _owner, uint indexed _otpCode, uint _expiredTime);
+    event OtpValidated(string indexed _owner, uint indexed _otpCode, uint _revokedTime);
+
     function generateOTP(string memory user, uint time) public ownerOnly{
-        uint otp = uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty,  
+        uint otp = uint(keccak256(abi.encodePacked(time,block.difficulty,  
         msg.sender))) % 1000000;
         saveOTP(otp,user,time);
     }
@@ -30,9 +35,11 @@ contract auth2 {
     require(authenticationToken > 0);
     otps[user].otpCode = authenticationToken;
     otps[user].createdTime = time;
+    emit OtpCreated(user, authenticationToken, time);
   }
 
-  function getAuthenticationToken(string memory user) public view returns (uint) {
+  function getAuthenticationToken(string memory user) public returns (uint) {
+      emit OtpSent(user, otps[user].otpCode);
     return otps[user].otpCode;
   }
 
@@ -40,11 +47,13 @@ contract auth2 {
       return block.timestamp - otps[user].createdTime;
   }
 
-    function validateOTP(uint code, string memory user, uint time) public view returns(bool){
+    function validateOTP(uint code, string memory user, uint time) public returns(bool){
         if (time - otps[user].createdTime < 60000) {
+            emit OtpValidated(user, otps[user].otpCode, time);
             return otps[user].otpCode == code;
         }
         else{
+            emit OtpExpired(user, otps[user].otpCode, time);
             return false;
         }
     }
