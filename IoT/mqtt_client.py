@@ -1,7 +1,7 @@
 # enable TLS client.tls_set(tls_version=mqtt.client.ssl.PROTOCOL_TLS)
 
 #
-# Copyright 2021 HiveMQ GmbH
+# Copyright 445021 HiveMQ GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from sre_parse import GLOBAL_FLAGS
 import time
 import paho.mqtt.client as paho
 from paho import mqtt
@@ -30,10 +31,21 @@ def on_publish(client, userdata, mid, properties=None):
 
 # print which topic was subscribed to
 def on_subscribe(client, userdata, mid, granted_qos, properties=None):
-    print("Subscribed: " + str(mid) + " " + str(granted_qos))
+    interact.generateOTP("user1")
+    otp = interact.getAuthenticationToken("user1")
+    # client.publish("encyclopedia/test", otp, qos=1)
+    print("Your OTP is: " + str(otp))
+    # print("Subscribed: " + str(mid) + " " + str(granted_qos))
 
 # print message, useful for checking if it was successful
 def on_message(client, userdata, msg):
+    otp = int(msg.payload.decode("utf-8"))
+    res = interact.validateOTP(otp, "user1")
+    if not res:
+        print("Invalid OTP")
+        client.disconnect()
+    else:
+        print("Valid OTP")
     print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
 
 # using MQTT version 5 here, for 3.1.1: MQTTv311, 3.1: MQTTv31
@@ -49,13 +61,16 @@ client.username_pw_set("Prasanna8446", "Prasu8446")
 # connect to HiveMQ Cloud on port 8883 (desult for MQTT)
 client.connect("64a80fb731404d588892b35b24a09263.s1.eu.hivemq.cloud", 8883)
 
+
 # setting callbacks, use separate functions like above for better visibility
 client.on_subscribe = on_subscribe
 client.on_message = on_message
 client.on_publish = on_publish
 
 # subscribe to all topics of encyclopedia by using the wildcard "#"
+curr_time = time.time()
 client.subscribe("encyclopedia/#", qos=1)
+print("Subscribe time is: " + str(time.time() - curr_time))
 
 # a single publish, this can also be done in loops, etc.
 

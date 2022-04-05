@@ -24,31 +24,26 @@ def generateOTP(user):
 
 def getAuthenticationToken(user):
     try:
-        tx_hash = counter.functions.getAuthenticationToken(user).transact()
-        print(tx_hash)
-        tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
-        print(tx_receipt)
-        return tx_receipt
+        otp = counter.functions.getAuthenticationToken(user).call()
+        return otp
     except Exception as e:
         print(e)
 
 def validateOTP(code, user):
     try:
-        tx_hash = counter.functions.validateOTP(code, user, math.ceil(time.time())).transact()
-        print(tx_hash)
-        tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
-        print(tx_receipt)
-        return tx_receipt
+        print(math.ceil(time.time()))
+        res = counter.functions.validateOTP(code, user, math.ceil(time.time())).call()
+        return res
     except Exception as e:
         print(e)
 
-generateOTP("user1")
-time.sleep(1)
-otp = getAuthenticationToken("user1")
-print(otp)
-time.sleep(1)
-res = validateOTP(otp, "user1")
-print(res)
-time.sleep(62)
-res2 = validateOTP(otp, "user1")
-print(res2)
+# generateOTP("user1")
+# time.sleep(1)
+# otp = getAuthenticationToken("user1")
+# print(otp)
+# time.sleep(1)
+# res = validateOTP(otp, "user1")
+# print(res)
+# time.sleep(62)
+# res2 = validateOTP(otp, "user1")
+# print(res2)

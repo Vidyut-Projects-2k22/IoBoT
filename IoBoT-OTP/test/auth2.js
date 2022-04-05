@@ -12,25 +12,25 @@ contract("Auth", function (accounts) {
   });
   it("Generated OTP", async function () {
     const instance = await Auth.deployed();
-    await instance.generateOTP(accounts[0], 0);
+    await instance.generateOTP("user1", 0);
     return assert.isTrue(true);
   })
   it("Validated OTP", async function () {
     const instance = await Auth.deployed();
-    const otp = await instance.getAuthenticationToken(accounts[0]);
-    const result = await instance.validateOTP(otp, accounts[0], 30);
-    const result2 = await instance.validateOTP(0, accounts[0], 30);
+    const otp = await instance.getAuthenticationToken("user1");
+    const result = await instance.validateOTP(otp, "user1", 30);
+    const result2 = await instance.validateOTP(0, "user1", 30);
     assert.equal(result, true, "OTP is valid");
     assert.equal(result2, false, "OTP is invalid");
   })
   it("Expired OTP", async function () {
     const instance = await Auth.deployed();
-    const otp = await instance.getAuthenticationToken(accounts[0]);
+    const otp = await instance.getAuthenticationToken("user1");
 
     function timeout(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
-    const result = await instance.validateOTP(otp, accounts[0], 60000);
+    const result = await instance.validateOTP(otp, "user1", 60);
     assert.equal(result, false, "OTP has expired");
 
   })
