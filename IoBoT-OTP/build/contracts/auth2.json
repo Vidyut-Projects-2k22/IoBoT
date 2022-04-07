@@ -41,7 +41,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -60,7 +61,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -89,7 +91,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"user\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"time\",\"type\":\"uint256\"}],\"name\":\"generateOTP\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"user\",\"type\":\"string\"}],\"name\":\"getAuthenticationToken\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"user\",\"type\":\"string\"}],\"name\":\"getTime\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"code\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"user\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"time\",\"type\":\"uint256\"}],\"name\":\"validateOTP\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/newauth.sol\":\"auth2\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/newauth.sol\":{\"keccak256\":\"0x01c07d3566b192ea7e34c296297d6989dd9bfdfac20526e6f6e5d83ff2bccf13\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://5b358cf1b526d4fa698f16451521f75d29be8db4dcc9319698e4882f96226de0\",\"dweb:/ipfs/QmZLAABKUSCEVw9fopNXHarX1HbfKpkW7KsmTXpUj2t7pU\"]}},\"version\":1}",
@@ -8852,10 +8855,17 @@
       "links": {},
       "address": "0x6c1383507Ca9464b56d625dd3026b28c2cDdF84e",
       "transactionHash": "0x50b01b1a91ae1c1acc9476a43b222b4654893e2e70740788594a499d0ff1218d"
+    },
+    "1649269440049": {
+      "events": {},
+      "links": {},
+      "address": "0xAcc07a898a121888C29160fE572Aa60E7D2DeA5B",
+      "transactionHash": "0xc504423a218d0d3e8184ac25ea2a30498c3e9ad1922b73b669c6a13813f70c3e"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-04-05T13:24:40.615Z",
+  "updatedAt": "2022-04-06T18:24:32.073Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},
