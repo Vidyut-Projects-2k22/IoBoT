@@ -15,10 +15,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import ssl
 import time
 import paho.mqtt.client as paho
 from paho import mqtt
 import interact
+
+glob_otp = 0
 
 # setting callbacks for different events to see if it works, print the message etc.
 def on_connect(client, userdata, flags, rc, properties=None):
@@ -30,22 +33,31 @@ def on_publish(client, userdata, mid, properties=None):
 
 # print which topic was subscribed to
 def on_subscribe(client, userdata, mid, granted_qos, properties=None):
-    interact.generateOTP("user1")
-    otp = interact.getAuthenticationToken("user1")
-    # client.publish("encyclopedia/test", otp, qos=1)
-    print("Your OTP is: " + str(otp))
-    # print("Subscribed: " + str(mid) + " " + str(granted_qos))
+    # interact.generateOTP("user1")
+    # otp = interact.getAuthenticationToken("user1")
+    # global glob_otp
+    # glob_otp = otp
+    # client.publish("encyclopedia/test.", otp, qos=1)
+    # print("Your OTP is: " + str(otp))
+    print("Subscribed: " + str(mid) + " " + str(granted_qos))
 
 # print message, useful for checking if it was successful
 def on_message(client, userdata, msg):
-    otp = int(msg.payload.decode("utf-8"))
-    res = interact.validateOTP(otp, "user1")
-    if not res:
-        print("Invalid OTP")
-        client.disconnect()
-    else:
-        print("Valid OTP")
-    print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
+    msg = msg.payload.decode("utf-8")
+    if msg == "generate":
+        interact.generateOTP("user1")
+        otp = interact.getAuthenticationToken("user1")
+        client.publish("encyclopedia/test.", "Your OTP is : " + str(otp), qos=1)
+    elif (len(msg) == 6):
+        res = interact.validateOTP(otp, "user1")
+        if not res:
+            print("Invalid OTP")
+            client.publish("encyclopedia/test", "Invalid OTP", qos=1)
+            client.disconnect()
+        else:
+            print("Valid OTP")
+            client.publish("encyclopedia/test", "Valid OTP", qos=1)
+    # print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
 
 # using MQTT version 5 here, for 3.1.1: MQTTv311, 3.1: MQTTv31
 # userdata is user defined data of any type, updated by user_data_set()
@@ -66,10 +78,9 @@ client.on_subscribe = on_subscribe
 client.on_message = on_message
 client.on_publish = on_publish
 
+
 # subscribe to all topics of encyclopedia by using the wildcard "#"
-curr_time = time.time()
 client.subscribe("encyclopedia/#", qos=1)
-print("Subscribe time is: " + str(time.time() - curr_time))
 
 # a single publish, this can also be done in loops, etc.
 
